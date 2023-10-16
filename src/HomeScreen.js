@@ -14,7 +14,6 @@ export default function HomeScreen() {
       }
 
       const scrollToTop = () => {
-        // Mueve el ScrollView al principio
         scrollViewRef.current.scrollTo({ x: 0, y: 0});
       };
     
@@ -37,7 +36,11 @@ export default function HomeScreen() {
                 />
             </View>
 
-            <ScrollView>
+            <ScrollView
+            ref={scrollViewRef}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
                 {data ? (data.pokemon_v2_pokemon.map(({ id, name }) => (
                     <View key={id} style={styles.pokemonItems}>
                         <View style={styles.pokemonContent}>
