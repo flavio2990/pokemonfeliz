@@ -8,4 +8,4 @@ query GetPokemon {
     name
   }
 }
-`;
+`
