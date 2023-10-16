@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { ApolloClient, ApolloProvider,InMemoryCache } from '@apollo/client'
+
+
+import HomeScreen from './src/HomeScreen'
+
+const Stack = createNativeStackNavigator();
+
+
 
 export default function App() {
+  const client = new ApolloClient({
+    uri: 'https://beta.pokeapi.co/graphql/v1beta',
+    cache: new InMemoryCache()
+  })
+
   return (
-    <View style={styles.container}>
-      <Text>new comment</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApolloProvider>
+
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
