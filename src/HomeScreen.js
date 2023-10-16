@@ -21,8 +21,8 @@ export default function HomeScreen() {
     const scrollViewRef = React.createRef()
 
     const filteredPokemon = data
-    ? data.pokemon_v2_pokemon.filter(({ name }) => name.toLowerCase().includes(searchInput.toLowerCase()))
-    : []
+        ? data.pokemon_v2_pokemon.filter(({ name }) => name.toLowerCase().includes(searchInput.toLowerCase()))
+        : []
 
     return (
         <View style={styles.container}>
@@ -40,18 +40,7 @@ export default function HomeScreen() {
                     onChangeText={setSearchInput}
                 />
             </View>
-
             <ScrollView ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={16} >
-                {/* {data ? (data.pokemon_v2_pokemon.map(({ id, name }) => (
-                    <View key={id} style={styles.pokemonItems}>
-                        <View style={styles.pokemonContent}>
-                        <Text style={styles.pokemonText}>{id} {name.charAt(0).toUpperCase() + name.slice(1)}</Text>
-                        <Image
-                            style={styles.pokeImage}
-                            source={{
-                                uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-                            }}
-                        /> */}
                 {filteredPokemon.length > 0 ? (
                     filteredPokemon.map(({ id, name }) => (
                         <View key={id} style={styles.pokemonItems}>
@@ -71,7 +60,6 @@ export default function HomeScreen() {
                 ) : (
                     <Text style={styles.loadText}>Loading...</Text>
                 )}
-
             </ScrollView>
             {scrollPosition > 20 && <BackToTop scrollToTop={scrollToTop} />}
         </View>
