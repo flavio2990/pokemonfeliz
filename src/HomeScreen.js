@@ -1,4 +1,4 @@
-import React, {useState}from "react"
+import React, { useState } from "react"
 import { View, Text, StyleSheet, ScrollView, Image, TextInput } from 'react-native'
 import { useQuery } from "@apollo/client"
 
@@ -8,17 +8,21 @@ import BackToTop from "../Components/BackToTop"
 export default function HomeScreen() {
     const { data } = useQuery(GET_POKEMON)
     const [scrollPosition, setScrollPosition] = useState(0)
+    const [searchInput, setSearchInput] = useState('')
 
     const handleScroll = (event) => {
-        setScrollPosition(event.nativeEvent.contentOffset.y);
-      }
+        setScrollPosition(event.nativeEvent.contentOffset.y)
+    }
 
-      const scrollToTop = () => {
-        scrollViewRef.current.scrollTo({ x: 0, y: 0});
-      };
-    
-      const scrollViewRef = React.createRef();
+    const scrollToTop = () => {
+        scrollViewRef.current.scrollTo({ x: 0, y: 0 })
+    };
 
+    const scrollViewRef = React.createRef()
+
+    const filteredPokemon = data
+    ? data.pokemon_v2_pokemon.filter(({ name }) => name.toLowerCase().includes(searchInput.toLowerCase()))
+    : []
 
     return (
         <View style={styles.container}>
@@ -27,21 +31,18 @@ export default function HomeScreen() {
                 <Text style={styles.subText}>Tengo que atraparlos!</Text>
             </View>
             <View >
-                <TextInput 
-                style={styles.inputStyle}
-                placeholder="Search"
-                multiline={false}
-                fontSize={18}
-                placeholderTextColor="black"
+                <TextInput
+                    style={styles.inputStyle}
+                    placeholder="Search"
+                    multiline={false}
+                    fontSize={18}
+                    placeholderTextColor="black"
+                    onChangeText={setSearchInput}
                 />
             </View>
 
-            <ScrollView
-            ref={scrollViewRef}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          >
-                {data ? (data.pokemon_v2_pokemon.map(({ id, name }) => (
+            <ScrollView ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={16} >
+                {/* {data ? (data.pokemon_v2_pokemon.map(({ id, name }) => (
                     <View key={id} style={styles.pokemonItems}>
                         <View style={styles.pokemonContent}>
                         <Text style={styles.pokemonText}>{id} {name.charAt(0).toUpperCase() + name.slice(1)}</Text>
@@ -50,10 +51,23 @@ export default function HomeScreen() {
                             source={{
                                 uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
                             }}
-                        />
+                        /> */}
+                {filteredPokemon.length > 0 ? (
+                    filteredPokemon.map(({ id, name }) => (
+                        <View key={id} style={styles.pokemonItems}>
+                            <View style={styles.pokemonContent}>
+                                <Text style={styles.pokemonText}>
+                                    {id} {name.charAt(0).toUpperCase() + name.slice(1)}
+                                </Text>
+                                <Image
+                                    style={styles.pokeImage}
+                                    source={{
+                                        uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+                                    }}
+                                />
+                            </View>
                         </View>
-                    </View>
-                ))
+                    ))
                 ) : (
                     <Text style={styles.loadText}>Loading...</Text>
                 )}
@@ -123,7 +137,7 @@ const styles = StyleSheet.create({
         borderColor: 'blue',
         height: 40,
         width: 200,
-        borderRadius:5,
+        borderRadius: 5,
         paddingHorizontal: 10,
 
     },
